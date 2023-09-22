@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-)@dk3)0wvv@zvac@9jn(1c*sdxadyv(k&8(xh7+a@3$-+hgns7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -78,24 +78,24 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'tasks_manager',
-        'USER': 'app',
-        'PASSWORD': '123qwe',
-        'HOST': 'localhost',
-        'PORT': '5555'
-    }
-}
-
-#
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': 'mydatabase',
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'tasks_manager',
+#         'USER': 'app',
+#         'PASSWORD': '123qwe',
+#         'HOST': 'localhost',
+#         'PORT': '5555'
 #     }
 # }
+
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'mydatabase',
+    }
+}
 
 
 # Password validation

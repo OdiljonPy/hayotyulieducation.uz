@@ -112,6 +112,7 @@ class Billing(models.Model):
 
 
 class Student(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author', blank=True, null=True, verbose_name="Менеджер")
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     billing = models.OneToOneField(Billing, on_delete=models.CASCADE, null=True, verbose_name="Чеки оплата")
     teachers = models.ManyToManyField(Teacher, through='StudentTeacher')

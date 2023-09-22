@@ -43,9 +43,24 @@ class IsThereReceiptFilter(admin.SimpleListFilter):
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
     # inlines = (StudentTeacherInline, StudentTopicInline)
-    list_display = ('person_info', 'user', 'get_create_at', "get_courses_name")
+    list_display = ('person_info', 'user', 'author', 'get_create_at', "get_courses_name", "passport_me",
+                    "passport_father", "passport_mother", "metric_me", "metric_father", "metric_mother",
+                    "marriage_certificate", "picture", "spid", "forma_086", "forma_064", "narkologiya", "psix_bolnitsa",
+                    "tuberklyoz", "sifliz")
     list_filter = (IsThereReceiptFilter, "billing__create_at", "teachers__course_name")
     search_fields = ('person_info__first_name__icontains',)
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if not request.user.is_superuser:
+            qs = qs.filter(author=request.user)
+        return qs
+
+    def save_model(self, request, obj, form, change):
+        # Set the user as the current admin when creating a new student
+        if not obj.author:
+            obj.author = request.user
+        super().save_model(request, obj, form, change)
 
     def get_create_at(self, obj):
         from django.utils.html import format_html
