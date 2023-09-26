@@ -41,5 +41,5 @@ class FullPersonalInfoForm(forms.ModelForm):
             "study_major",
             "region",
             "school",
-            "language"
+            "nationality"
         ]
