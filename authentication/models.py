@@ -9,7 +9,7 @@ from app import settings
 from .managers import CustomUserManager
 
 languages_list = []
-with open('./data/languages.txt', 'r') as file:
+with open('/root/hayotyulieducation.uz/data/languages.txt', 'r') as file:
     languages_list = [(lan.strip(), lan.strip()) for lan in file.read().split('\n')]
 
 
