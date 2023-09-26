@@ -40,9 +40,14 @@ class IsThereReceiptFilter(admin.SimpleListFilter):
             return queryset.filter(billing__receipt__exact='')
 
 
+class BillingInline(admin.TabularInline):
+    model = Billing
+    extra = 1
+
+
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
-    # inlines = (StudentTeacherInline, StudentTopicInline)
+    inlines = [BillingInline]
     list_display = ('person_info', 'user', 'author', 'get_create_at', "get_courses_name", "passport_me",
                     "passport_father", "passport_mother", "metric_me", "metric_father", "metric_mother",
                     "marriage_certificate", "picture", "spid", "forma_086", "forma_064", "narkologiya", "psix_bolnitsa",
@@ -118,7 +123,7 @@ class PersonInfoAdmin(admin.ModelAdmin):
 
 @admin.register(Billing)
 class BillingAdmin(admin.ModelAdmin):
-    list_display = ('id', 'receipt', 'create_at', "student")
+    list_display = ('id', 'name', 'receipt', 'verified', 'create_at', "student")
     list_filter = ('create_at', "student")
     search_fields = ('student__person_info__first_name__icontains',)
     actions = ['delete_selected']

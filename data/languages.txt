@@ -1,3 +1,4 @@
+Uzbek
 Afar
 Abkhaz
 Avestan
@@ -171,7 +172,6 @@ Tahitian
 Uyghur, Uighur
 Ukrainian
 Urdu
-Uzbek
 Venda
 Vietnamese
 Volapük

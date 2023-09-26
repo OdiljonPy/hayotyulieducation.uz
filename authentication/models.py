@@ -81,57 +81,41 @@ class Topic(models.Model):
         verbose_name_plural = 'Топики'
 
 
-class Billing(models.Model):
-    def upload_receipt_folder(self, filename):
-        return 'uploaded/receipt/{0}'.format(
-            filename)
-
-    def delete_receipt(self):
-        if self.receipt:
-            file_path = os.path.join(settings.MEDIA_ROOT, self.receipt.name)
-
-            if os.path.exists(file_path):
-                os.remove(file_path)
-
-            self.receipt = None
-            self.save()
-
-    receipt = models.FileField("Чек", upload_to=upload_receipt_folder, null=True)
-    create_at = models.DateField("Время создания", default=datetime.datetime.now().date())
-
-    def __str__(self):
-        try:
-            return "%s %s" % (
-                self.create_at, self.student)
-        except Exception as e:
-            return "error"
-
-    class Meta(object):
-        verbose_name = 'Чеки оплаты'
-        verbose_name_plural = 'Чеки оплаты'
-
-
 class Student(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author', blank=True, null=True, verbose_name="Менеджер")
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author', blank=True, null=True,
+                               verbose_name="Менеджер")
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    billing = models.OneToOneField(Billing, on_delete=models.CASCADE, null=True, verbose_name="Чеки оплата")
+    # billing = models.One(Billing, on_delete=models.CASCADE)
     teachers = models.ManyToManyField(Teacher, through='StudentTeacher')
     topics = models.ManyToManyField(Topic, through='StudentTopic', related_name='students')
     person_info = models.OneToOneField(PersonInfo, on_delete=models.CharField, null=True)
 
-    main_documents = models.FileField(upload_to='main_documents', blank=True, null=True, verbose_name="Общие документы студента")
-    passport_red = models.FileField(upload_to='passport_red', blank=True, null=True, verbose_name="Красный паспорт студента")
+    main_documents = models.FileField(upload_to='main_documents', blank=True, null=True, verbose_name="Общие "
+                                                                                                      "документы "
+                                                                                                      "студента")
+    passport_red = models.FileField(upload_to='passport_red', blank=True, null=True, verbose_name="Красный паспорт "
+                                                                                                  "студента")
     tabel = models.FileField(upload_to='tabel', blank=True, null=True, verbose_name="Табель")
-    school_certificate = models.FileField(upload_to='school_certificate', blank=True, null=True, verbose_name="Аттестат")
-    medical_certificate = models.FileField(upload_to='medical_certificate', blank=True, null=True, verbose_name="Медицинская справка")
+    school_certificate = models.FileField(upload_to='school_certificate', blank=True, null=True,
+                                          verbose_name="Аттестат")
+    medical_certificate = models.FileField(upload_to='medical_certificate', blank=True, null=True,
+                                           verbose_name="Медицинская справка")
 
     passport_me = models.BooleanField(default=False, verbose_name="Паспорт студента")
+    passport_me_translate = models.BooleanField(default=False, verbose_name="Паспорт студента (Таржима натариус)")
     passport_father = models.BooleanField(default=False, verbose_name="Паспорт отца")
+    passport_father_translate = models.BooleanField(default=False, verbose_name="Паспорт отца  (Таржима натариус)")
     passport_mother = models.BooleanField(default=False, verbose_name="Паспорт матери")
+    passport_mother_translate = models.BooleanField(default=False, verbose_name="Паспорт матери (Таржима натариус)")
     metric_me = models.BooleanField(default=False, verbose_name="Метрика студента")
+    metric_me_translate = models.BooleanField(default=False, verbose_name="Метрика студента (Таржима натариус)")
     metric_father = models.BooleanField(default=False, verbose_name="Метрика отца")
+    metric_father_translate = models.BooleanField(default=False, verbose_name="Метрика отца (Таржима натариус)")
     metric_mother = models.BooleanField(default=False, verbose_name="Метрика матери")
+    metric_mother_translate = models.BooleanField(default=False, verbose_name="Метрика матери (Таржима натариус)")
     marriage_certificate = models.BooleanField(default=False, verbose_name="Свидетельство о браке")
+    marriage_certificate_translate = models.BooleanField(default=False, verbose_name="Свидетельство о браке (Таржима "
+                                                                                     "натариус)")
     picture = models.BooleanField(default=False, verbose_name="Фотография студента ")
 
     spid = models.BooleanField(default=False, verbose_name="СПИД")
@@ -199,3 +183,36 @@ class Message(models.Model):
     title = models.CharField("Сообщение", max_length=1000)
     upload = models.FileField(upload_to=user_directory_path, null=True)
     studenttopic = models.ForeignKey(StudentTopic, on_delete=models.CASCADE, related_name="messages")
+
+
+class Billing(models.Model):
+    def upload_receipt_folder(self, filename):
+        return 'uploaded/receipt/{0}'.format(
+            filename)
+
+    def delete_receipt(self):
+        if self.receipt:
+            file_path = os.path.join(settings.MEDIA_ROOT, self.receipt.name)
+
+            if os.path.exists(file_path):
+                os.remove(file_path)
+
+            self.receipt = None
+            self.save()
+
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    receipt = models.FileField("Чек", upload_to=upload_receipt_folder, null=True)
+    create_at = models.DateField("Время создания", default=datetime.datetime.now().date())
+    verified = models.BooleanField(default=False, verbose_name="Проверена")
+
+    def __str__(self):
+        try:
+            return "%s %s" % (
+                self.create_at, self.student)
+        except Exception as e:
+            return "error"
+
+    class Meta(object):
+        verbose_name = 'Чеки оплаты'
+        verbose_name_plural = 'Чеки оплаты'
