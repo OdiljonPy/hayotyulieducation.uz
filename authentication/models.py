@@ -30,7 +30,8 @@ class PersonInfo(models.Model):
     country = models.CharField(max_length=120, blank=True, null=True, verbose_name="Страна")
 
     LANG_CHOICES = languages_list
-    language = models.CharField(
+    nationality = models.CharField(
+        verbose_name="Национальность",
         max_length=100,
         choices=LANG_CHOICES,
         null=True
@@ -90,9 +91,10 @@ class Student(models.Model):
     topics = models.ManyToManyField(Topic, through='StudentTopic', related_name='students')
     person_info = models.OneToOneField(PersonInfo, on_delete=models.CharField, null=True)
 
-    main_documents = models.FileField(upload_to='main_documents', blank=True, null=True, verbose_name="Общие "
-                                                                                                      "документы "
-                                                                                                      "студента")
+    full_verified = models.BooleanField(default=False, verbose_name="Полностью проверен")
+
+    main_documents = models.FileField(upload_to='main_documents', blank=True, null=True,
+                                      verbose_name="Общие документы студента")
     passport_red = models.FileField(upload_to='passport_red', blank=True, null=True, verbose_name="Красный паспорт "
                                                                                                   "студента")
     tabel = models.FileField(upload_to='tabel', blank=True, null=True, verbose_name="Табель")
@@ -100,6 +102,8 @@ class Student(models.Model):
                                           verbose_name="Аттестат")
     medical_certificate = models.FileField(upload_to='medical_certificate', blank=True, null=True,
                                            verbose_name="Медицинская справка")
+
+    dalolatnoma = models.FileField(upload_to="dalolatnoma", blank=True, null=True, verbose_name="Далолатнома")
 
     passport_me = models.BooleanField(default=False, verbose_name="Паспорт студента")
     passport_me_translate = models.BooleanField(default=False, verbose_name="Паспорт студента (Таржима натариус)")
@@ -201,7 +205,7 @@ class Billing(models.Model):
             self.save()
 
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100)
+    name = models.CharField(verbose_name="Комментарий", max_length=100, blank=True, null=True)
     receipt = models.FileField("Чек", upload_to=upload_receipt_folder, null=True)
     create_at = models.DateField("Время создания", default=datetime.datetime.now().date())
     verified = models.BooleanField(default=False, verbose_name="Проверена")
