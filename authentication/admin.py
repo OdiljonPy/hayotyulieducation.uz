@@ -48,11 +48,12 @@ class BillingInline(admin.TabularInline):
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
     inlines = [BillingInline]
-    list_display = ('person_info', 'user', 'author', 'get_create_at', "get_courses_name", "passport_me",
-                    "passport_father", "passport_mother", "metric_me", "metric_father", "metric_mother",
-                    "marriage_certificate", "picture", "spid", "forma_086", "forma_064", "narkologiya", "psix_bolnitsa",
-                    "tuberklyoz", "sifliz")
-    list_filter = (IsThereReceiptFilter, "billing__create_at", "teachers__course_name")
+    list_display = (
+    'person_info', 'user', 'author', 'get_create_at', "get_courses_name", "full_verified", "passport_me",
+    "passport_father", "passport_mother", "metric_me", "metric_father", "metric_mother",
+    "marriage_certificate", "picture", "spid", "forma_086", "forma_064", "narkologiya", "psix_bolnitsa",
+    "tuberklyoz", "sifliz")
+    list_filter = ("status", IsThereReceiptFilter, "billing__create_at", "teachers__course_name")
     search_fields = ('person_info__first_name__icontains',)
 
     def get_queryset(self, request):

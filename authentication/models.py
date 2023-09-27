@@ -3,10 +3,8 @@ import os
 
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, User
 from django.db import models
-from django.utils import timezone
-
+from ckeditor.fields import RichTextField
 from app import settings
-from .managers import CustomUserManager
 
 languages_list = []
 with open('/root/hayotyulieducation.uz/data/languages.txt', 'r') as file:
@@ -91,19 +89,30 @@ class Student(models.Model):
     topics = models.ManyToManyField(Topic, through='StudentTopic', related_name='students')
     person_info = models.OneToOneField(PersonInfo, on_delete=models.CharField, null=True)
 
+    status = models.IntegerField(choices=(
+        (1, "Активный"),
+        (0, "Архив"),
+    ), default=1)
+
     full_verified = models.BooleanField(default=False, verbose_name="Полностью проверен")
 
     main_documents = models.FileField(upload_to='main_documents', blank=True, null=True,
                                       verbose_name="Общие документы студента")
     passport_red = models.FileField(upload_to='passport_red', blank=True, null=True, verbose_name="Красный паспорт "
                                                                                                   "студента")
+    passport_red_translate = models.FileField(upload_to='passport_red', blank=True, null=True,
+                                              verbose_name="Красный паспорт студента  (Таржима натариус)")
     tabel = models.FileField(upload_to='tabel', blank=True, null=True, verbose_name="Табель")
     school_certificate = models.FileField(upload_to='school_certificate', blank=True, null=True,
                                           verbose_name="Аттестат")
+    school_certificate_translate = models.FileField(upload_to='school_certificate', blank=True, null=True,
+                                                    verbose_name="Аттестат (Таржима натариус)")
     medical_certificate = models.FileField(upload_to='medical_certificate', blank=True, null=True,
                                            verbose_name="Медицинская справка")
 
     dalolatnoma = models.FileField(upload_to="dalolatnoma", blank=True, null=True, verbose_name="Далолатнома")
+    dalolatnoma_translate = models.FileField(upload_to="dalolatnoma", blank=True, null=True,
+                                             verbose_name="Далолатнома (Таржима натариус)")
 
     passport_me = models.BooleanField(default=False, verbose_name="Паспорт студента")
     passport_me_translate = models.BooleanField(default=False, verbose_name="Паспорт студента (Таржима натариус)")
@@ -129,6 +138,8 @@ class Student(models.Model):
     psix_bolnitsa = models.BooleanField(default=False, verbose_name="Психиатрическая больница")
     tuberklyoz = models.BooleanField(default=False, verbose_name="Туберкулез")
     sifliz = models.BooleanField(default=False, verbose_name="Сифилис")
+
+    description = RichTextField(blank=True, null=True)
 
     def __str__(self):
         try:
