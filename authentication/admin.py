@@ -2,8 +2,6 @@ import datetime
 
 from django.contrib import admin
 from django.db.models import Count, Q
-
-# Register your models here.
 from .models import Student, Teacher, PersonInfo, StudentTeacher, Topic, StudentTopic, Message, Billing
 
 
@@ -49,10 +47,10 @@ class BillingInline(admin.TabularInline):
 class StudentAdmin(admin.ModelAdmin):
     inlines = [BillingInline]
     list_display = (
-    'person_info', 'user', 'author', 'get_create_at', "get_courses_name", "full_verified", "passport_me",
-    "passport_father", "passport_mother", "metric_me", "metric_father", "metric_mother",
-    "marriage_certificate", "picture", "spid", "forma_086", "forma_064", "narkologiya", "psix_bolnitsa",
-    "tuberklyoz", "sifliz")
+        'person_info', 'user', 'author', 'get_create_at', "get_courses_name", "full_verified", "total_billing_amount",
+        "passport_me", "passport_father", "passport_mother", "metric_me", "metric_father", "metric_mother",
+        "marriage_certificate", "picture", "spid", "forma_086", "forma_064", "narkologiya", "psix_bolnitsa",
+        "tuberklyoz", "sifliz")
     list_filter = ("status", IsThereReceiptFilter, "billing__create_at", "teachers__course_name")
     search_fields = ('person_info__first_name__icontains',)
 
@@ -63,25 +61,32 @@ class StudentAdmin(admin.ModelAdmin):
         return qs
 
     def save_model(self, request, obj, form, change):
-        # Set the user as the current admin when creating a new student
         if not obj.author:
             obj.author = request.user
         super().save_model(request, obj, form, change)
+
+    def total_billing_amount(self, obj):
+        billings = Billing.objects.filter(student_id=obj.id, verified=True)
+        total = 0
+
+        for i in billings:
+            total += i.sum
+
+        return total
 
     def get_create_at(self, obj):
         from django.utils.html import format_html
         try:
             color = 'black'
-
-            if (datetime.datetime.now().date() - obj.billing.create_at).days >= 3:
+            if (datetime.datetime.now().date() - obj.create_at).days >= 3:
                 color = '#e69b00'
-            if (datetime.datetime.now().date() - obj.billing.create_at).days >= 7:
+            if (datetime.datetime.now().date() - obj.create_at).days >= 7:
                 color = 'red'
-            if obj.billing.receipt:
+            if obj.full_verified:
                 color = 'green'
-
-            return format_html("<div style='color:{}'>{}</div>", color, obj.billing.create_at)
-        except Exception:
+            return format_html("<div style='color:{}'>{}</div>", color, obj.create_at)
+        except Exception as e:
+            print(e)
             return "N/A"
 
     def get_courses_name(self, obj):
@@ -95,6 +100,7 @@ class StudentAdmin(admin.ModelAdmin):
         except Exception:
             return "N/A"
 
+    total_billing_amount.short_description = 'Оплаченная сумма'
     get_create_at.short_description = 'Дата создания'
     get_courses_name.short_description = 'Предметы'
 

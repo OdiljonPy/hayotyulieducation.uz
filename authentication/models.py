@@ -141,6 +141,8 @@ class Student(models.Model):
 
     description = RichTextField(blank=True, null=True)
 
+    create_at = models.DateField("Время создания", default=datetime.datetime.now().date())
+
     def __str__(self):
         try:
             return "%s %s %s" % (
@@ -218,6 +220,7 @@ class Billing(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     name = models.CharField(verbose_name="Комментарий", max_length=100, blank=True, null=True)
     receipt = models.FileField("Чек", upload_to=upload_receipt_folder, null=True)
+    sum = models.FloatField(default=0, verbose_name="Сумма оплаты")
     create_at = models.DateField("Время создания", default=datetime.datetime.now().date())
     verified = models.BooleanField(default=False, verbose_name="Проверена")
 
