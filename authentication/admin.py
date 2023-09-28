@@ -48,11 +48,19 @@ class StudentAdmin(admin.ModelAdmin):
     inlines = [BillingInline]
     list_display = (
         'person_info', 'user', 'author', 'get_create_at', "get_courses_name", "full_verified", "total_billing_amount",
-        "passport_me", "passport_father", "passport_mother", "metric_me", "metric_father", "metric_mother",
+        "get_passport_red", "get_school_certificate", "passport_me", "passport_father", "passport_mother", "metric_me",
+        "metric_father",
+        "metric_mother",
         "marriage_certificate", "picture", "spid", "forma_086", "forma_064", "narkologiya", "psix_bolnitsa",
         "tuberklyoz", "sifliz")
     list_filter = ("status", IsThereReceiptFilter, "billing__create_at", "teachers__course_name")
     search_fields = ('person_info__first_name__icontains',)
+
+    def get_passport_red(self, obj):
+        return bool(obj.passport_red)
+
+    def get_school_certificate(self, obj):
+        return bool(obj.school_certificate)
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -100,6 +108,10 @@ class StudentAdmin(admin.ModelAdmin):
         except Exception:
             return "N/A"
 
+    get_school_certificate.short_description = 'Аттестат'
+    get_school_certificate.boolean = True
+    get_passport_red.short_description = 'Красный паспорт студента'
+    get_passport_red.boolean = True
     total_billing_amount.short_description = 'Оплаченная сумма'
     get_create_at.short_description = 'Дата создания'
     get_courses_name.short_description = 'Предметы'
