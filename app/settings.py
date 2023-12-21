@@ -77,24 +77,24 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = { 
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql',
+#        'NAME': 'tasks_manager',
+#        'USER': 'postgres',
+#        'PASSWORD': 'JobSchedulerV3$',
+#        'HOST': 'localhost',
+#        'PORT': '5432'
+#    }
+# }
+
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'tasks_manager',
-        'USER': 'postgres',
-        'PASSWORD': 'JobSchedulerV3$',
-        'HOST': 'localhost',
-        'PORT': '5432'
-    }
+         'ENGINE': 'django.db.backends.sqlite3',
+         'NAME': 'mydatabase',
+     }
 }
-
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': 'mydatabase',
-#     }
-# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
