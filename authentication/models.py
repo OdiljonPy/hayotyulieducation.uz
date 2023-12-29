@@ -83,7 +83,7 @@ class Topic(models.Model):
 class Student(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='author', blank=True, null=True,
                                verbose_name="Менеджер")
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
     # billing = models.One(Billing, on_delete=models.CASCADE)
     teachers = models.ManyToManyField(Teacher, through='StudentTeacher')
     topics = models.ManyToManyField(Topic, through='StudentTopic', related_name='students')
