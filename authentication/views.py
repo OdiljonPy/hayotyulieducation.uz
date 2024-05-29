@@ -7,6 +7,11 @@ from .forms import RegisterForm, LoginForm, PersonalInfoForm, FullPersonalInfoFo
 from .models import Teacher, Student, Billing
 from .utils.v1 import is_student_or_teacher_obj
 
+from .utils.create_exel import create_exel_file
+from django.http.response import JsonResponse
+from rest_framework.decorators import api_view
+from rest_framework import status
+
 
 @login_required
 def log_out(request):
@@ -104,3 +109,10 @@ def personal_info(request):
         form = PersonalInfoForm()
 
     return render(request, 'registration/person-info.html', {"form": form, 'role': "Ожидает регистрации"})
+
+
+@api_view(['GET'])
+def students_sheet(request, user_id):
+    create_exel_file(user_id)
+    return JsonResponse(
+        data={'message': 'A student data file has been created!'}, status=status.HTTP_200_OK)

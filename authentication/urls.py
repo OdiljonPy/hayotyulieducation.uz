@@ -11,4 +11,5 @@ urlpatterns = [
     path('user/teacher/update', views.personal_info, name='personal_teacher_info'),
     # path('user/student/update', views.personal_info_for_student, name='personal_student_info'),
     path('user/student/update', views.personal_info, name='personal_student_info'),
+    path('api/students/sheet/<int:user_id>/', views.students_sheet)
 ]
