@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     "crispy_bootstrap5",
     'ckeditor',
+    'rest_framework',
     'authentication',
     'tasksManager'
 ]
@@ -91,9 +92,9 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 DATABASES = {
     'default': {
-         'ENGINE': 'django.db.backends.sqlite3',
-         'NAME': 'mydatabase',
-     }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'mydatabase',
+    }
 }
 
 # Password validation
@@ -145,3 +146,5 @@ CKEDITOR_CONFIGS = {
         'width': 900,
     },
 }
+
+TELEGRAM_BOT_TOKEN = "7227383311:AAG7ZQ8jo_nTwTQeYtQ-0hTZeCakfUr9Bec"
