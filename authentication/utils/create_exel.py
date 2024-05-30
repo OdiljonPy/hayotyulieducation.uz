@@ -11,22 +11,24 @@ COLUMN_TITLE = (
 
 
 def create_exel_file(user_id):
+    from ..models import Student, Billing
     wb = Workbook()
     ws = wb.active
-    from ..models import Student, Billing
-    students = Student.objects.all()
     ws.append(COLUMN_TITLE)
+
+    students = Student.objects.all()
+
     for student in students:
         billing = Billing.objects.filter(student_id=student.id).first()
-        amount_paid = billing.sum
-        passport_red = bool(student.passport_red)
-        school_certificate = bool(student.school_certificate)
+        amount_paid = billing.sum if billing else None
         course_names = ""
-        res = [course_names + f"{name.course_name} " for name in student.teachers.all()]
+        if student.teachers:
+            res = [course_names + f"{name.course_name} " for name in student.teachers.all()]
+
         ws.append(
             (f"{student.person_info.first_name} {student.person_info.second_name} {student.person_info.father_name}",
-             f"{student.user.first_name} {student.user.last_name}",
-             f"{student.author.first_name} {student.author.last_name}",
+             f"{student.user} {student.user}",
+             f"{student.author} {student.author}",
              f"{student.person_info.birthday}",
              f"{student.person_info.number_of_contract}",
              f"{student.person_info.study_major}",
@@ -35,8 +37,8 @@ def create_exel_file(user_id):
              f"{course_names}",
              f"{student.full_verified}",
              f"{amount_paid}",
-             f"{passport_red}",
-             f"{school_certificate}",
+             f"{bool(student.passport_red)}",
+             f"{bool(student.school_certificate)}",
              f"{student.passport_me}",
              f"{student.passport_father}",
              f"{student.passport_mother}",
